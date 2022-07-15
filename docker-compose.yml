@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  minerva:
+    image: ghcr.io/minerva-corp/bot:master
+    env_file: .env
+    networks:
+      - minerva-network
+    restart:
+      on-failure
+
+networks:
+  minerva-network:

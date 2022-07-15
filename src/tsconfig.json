@@ -1,0 +1,20 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "../dist",
+		"rootDir": ".",
+		"baseUrl": ".",
+		"noEmit": true,
+		"noUnusedParameters": false,
+		"useUnknownInCatchVariables": false,
+		"skipLibCheck": true,
+		"paths": {
+			"#root/*": ["*"],
+			"#types/*": ["lib/types/*"],
+			"#utils/*": ["lib/utils/*"],
+			"#structures/*": ["lib/structures/*"],
+			"#database/*": ["lib/database/*"]
+		}
+	},
+	"include": ["."]
+}

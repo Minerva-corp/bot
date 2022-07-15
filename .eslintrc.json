@@ -1,0 +1,20 @@
+{
+	"extends": ["@sapphire", "plugin:unicorn/recommended"],
+	"rules": {
+		"curly": "error",
+		"func-names": "off",
+		"no-restricted-globals": ["error", "Buffer", "process", "setTimeout", "setInterval", "setImmediate", "clearTimeout", "clearInterval"], // nodejs/node#26334
+		"unicorn/no-unsafe-regex": "error",
+		"unicorn/prefer-at": "error",
+		"unicorn/prefer-top-level-await": "error",
+		"unicorn/prevent-abbreviations": "off",
+		"unicorn/no-nested-ternary": "off",
+		"unicorn/filename-case": "off",
+		"unicorn/explicit-length-check": "off",
+		"unicorn/no-null": "off",
+		"unicorn/consistent-function-scoping": "off",
+		"unicorn/no-await-expression-member": "off",
+		"@typescript-eslint/member-ordering": "off",
+		"@typescript-eslint/no-floating-promises": ["off"]
+	}
+}
