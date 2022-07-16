@@ -2,9 +2,12 @@ import { LogLevel, SapphireClient } from '@sapphire/framework';
 import * as BotConfig from '#root/config';
 import type { BitFieldResolvable, IntentsString, PartialTypes } from 'discord.js';
 import { GuildRepository, AfkRepository } from '#database/repository/index';
+import { ClientUtils } from '#utils/client-utils';
 
 export class MinervaClient extends SapphireClient {
-	public config = BotConfig;
+	public override config = BotConfig;
+
+	public override utils = new ClientUtils(this);
 
 	public override databases = {
 		guilds: new GuildRepository(),
@@ -13,6 +16,11 @@ export class MinervaClient extends SapphireClient {
 
 	public constructor(options: clientOptions) {
 		super({
+			ws: {
+				properties: {
+					browser: "Discord iOS"
+				}
+			},
 			intents: options.intents,
 			allowedMentions: { users: [], roles: [], repliedUser: false },
 			fetchPrefix: async (p) => (await this.databases.guilds.get(p.guildId!)).prefix,
@@ -40,9 +48,12 @@ interface clientOptions {
 
 declare module '@sapphire/framework' {
 	export interface SapphireClient {
+		utils: ClientUtils;
+		config: typeof BotConfig;
 		databases: {
 			guilds: GuildRepository;
 			afk: AfkRepository;
 		};
 	}
 }
+

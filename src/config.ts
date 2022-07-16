@@ -1,6 +1,7 @@
 import { cleanEnv, str } from 'envalid';
 import process from 'node:process';
 import { parseEnvValue } from '#utils/parse-env';
+import type { ActivityOptions, ClientPresenceStatus } from 'discord.js';
 
 process.env.NODE_ENV ??= 'development';
 
@@ -12,5 +13,20 @@ export const env = cleanEnv(process.env, {
 	PREFIX: str({ default: '!' })
 });
 
+export const presenceData: PresenceData = {
+    activities: [
+        { name: "💘 - {userCount} & {serverCount}!", type: "COMPETING" },
+		{ name: "Happy {whatDays}!", type: "LISTENING" }
+    ],
+    status: ["online"],
+    interval: 60000
+};
+
 export const BOT_OWNER: string[] = parseEnvValue(process.env.DEV_ID ?? '');
 export const SUPPORT_SERVER = 'https://discord.gg/2QBe96yg';
+
+interface PresenceData {
+	activities: ActivityOptions[];
+	status: ClientPresenceStatus[];
+	interval: number;
+}
