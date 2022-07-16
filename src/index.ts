@@ -7,6 +7,22 @@ const client = new MinervaClient({
 	partials: ['MESSAGE', 'CHANNEL', 'GUILD_MEMBER']
 });
 
+process.on('unhandledRejection', error => {
+	client.logger.error('Unhandled promise rejection:', error);
+});
+
+process.on('rejectionHandled', error => {
+	client.logger.error('rejectionHandled promise rejection:', error);
+})
+
+process.on('uncaughtException', error => {
+	client.logger.error('uncaughtException promise rejection:', error);
+})
+
+process.on('uncaughtExceptionMonitor', error => {
+	client.logger.error('uncaughtExceptionMonitor promise rejection:', error);
+})
+
 try {
 	await client.start();
 } catch (error) {

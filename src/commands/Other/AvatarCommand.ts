@@ -6,6 +6,18 @@ import { GuildMember, Message, MessageEmbed } from "discord.js";
 @ApplyOptions<MinervaCommand['options']>({
     name: 'avatar',
     description: "Display you'r avatar or another member avatar.",
+    chatInputCommand: {
+        register: true,
+        messageCommand: true,
+        options: [
+            {
+                name: 'users',
+                description: 'the users for the display avatar',
+                type: 'USER',
+                required: false
+            }
+        ]
+    }
 })
 
 export class AvatarCommand extends MinervaCommand {
@@ -18,5 +30,17 @@ export class AvatarCommand extends MinervaCommand {
         }
 
         await message.reply({ embeds: [new MessageEmbed().setColor("GREY").setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) }).setImage(member.user.displayAvatarURL({ dynamic: true, size: 4096 }))] })
+        return;
+    }
+
+    public override async chatInputRun(interaction: MinervaCommand.Interaction) {
+        const member = interaction.options.getMember('users') as GuildMember || interaction.member;
+
+        if(!member) {
+            return interaction.reply({ content: `${SadIcon} - That user was not found!` })
+        }
+
+        await interaction.reply({ embeds: [new MessageEmbed().setColor("GREY").setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) }).setImage(member.user.displayAvatarURL({ dynamic: true, size: 4096 }))] })
+        return;
     }
 }

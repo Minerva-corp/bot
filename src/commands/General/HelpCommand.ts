@@ -127,7 +127,7 @@ export class HelpCommand extends MinervaCommand {
 			.setAuthor({ name: `Information Command for - ${context.commandName}` })
 			.setColor('YELLOW')
 			.setThumbnail(this.client.user?.displayAvatarURL({ dynamic: true }) as string)
-			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+			.setFooter({ text: `<> = required | [] = optional` })
 
 		if(command) {
 			embed.addField('Name', `**\`${command.name}**\``, false);

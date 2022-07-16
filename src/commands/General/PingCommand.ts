@@ -14,21 +14,38 @@ import type { ColorResolvable, Message, MessageEmbed, User } from 'discord.js';
 })
 export class PingCommand extends MinervaCommand {
 	public override async messageRun(message: Message): Promise<void> {
-		const embed = this.RunCommand(message.author);
-		await message.reply({ embeds: [embed] });
+		const before = Date.now();
+		const pingMessage = await message.reply(`Ping?`);
+		const after = Date.now() - before;
+		const embed = this.RunCommand(after.toString(), message.author);
+		await pingMessage.edit({ embeds: [embed], content: ' ' })
 	}
 
 	public override async chatInputRun(interaction: MinervaCommand.Interaction): Promise<void> {
-		const embed = this.RunCommand(interaction.user);
-		await interaction.reply({ embeds: [embed] });
+		const before = Date.now()
+		await interaction.reply({ content: `Ping?` })
+		const after = Date.now() - before;
+		const embed = this.RunCommand(after.toString(), interaction.user);
+		await interaction.editReply({ embeds: [embed], content: ' ' });
 	}
 
-	private RunCommand(user: User): MessageEmbed {
+	private RunCommand(latency: string, user: User): MessageEmbed {
 		const wsLatency = this.client.ws.ping.toFixed(0);
 		const embed = createEmbed('info')
 			.setColor(this.searchHex(wsLatency))
 			.setTitle(`🏓 Pong!`)
-			.setDescription(`🌐 **|** WebSocket: ${wsLatency}`)
+			.addFields(
+				{
+					name: "📶 **|** API",
+                    value: `**\`${latency}\`** ms`,
+                    inline: true
+				},
+				{
+					name: `🌐 **|** WebSocket`,
+					value: `**\`${wsLatency}\`** ms`,
+					inline: true
+				}
+			)
 			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp();
 

@@ -38,7 +38,7 @@ export class NukeCommand extends MinervaCommand {
         const action = new MessageActionRow()
             .addComponents([confirm, cancel])
 
-        await interaction.reply({ content: `Are you sure you want to nuke ${channelMention(channel.id)}?`, components: [action] })
+        await interaction.reply({ content: `Are you sure you want to **__Nuke__** ${channelMention(channel.id)}?`, components: [action] })
         const filter = (i: { user: { id: string; }; }) => i.user.id === interaction.user.id;
         const collector = interaction.channel?.createMessageComponentCollector({ filter });
 
@@ -55,11 +55,16 @@ export class NukeCommand extends MinervaCommand {
 
                 //@ts-ignore
                 const cloneText = await channel.clone();
-                _i.update({ content: `${cloneText} was nuked successfully!`, components: [action] })
                 action.components[0].setDisabled(true)
                 action.components[1].setDisabled(true)
+                _i.update({ content: `${cloneText} was nuked successfully!`, components: [action] })
                 //@ts-ignore
-                return cloneText.send({ content: `\`${interaction.user.tag}\` nuked this channel.` });
+                cloneText.send({ content: `\`${interaction.user.tag}\` nuked this channel.\nhttps://tenor.com/view/huge-explosion-boom-explosive-gif-16819858` }).then((msg) => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000)
+                })
+                return;
             }
         })
     }
