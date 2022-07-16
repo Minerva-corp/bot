@@ -1,5 +1,5 @@
 import { ColorResolvable, MessageEmbed } from 'discord.js';
-import { Check_Mark } from '#types/emotes';
+import { Check_Mark, Error_Mark } from '#root/lib/types/declarations/emotes';
 
 type hexColorsType = 'error' | 'info' | 'success' | 'warn';
 const hexColors: Record<hexColorsType, ColorResolvable> = {
@@ -19,7 +19,7 @@ export function createEmbed(type: hexColorsType, message?: string, emoji = false
 		embed.setDescription(`:x: **|** ${message}`)
 	}
 	if (type === 'error' && emoji) {
-		embed.setDescription(`:x: **|** ${message!}`);
+		embed.setDescription(`${Error_Mark} **|** ${message!}`);
 	}
 	if (type === 'success' && emoji) {
 		embed.setDescription(`${Check_Mark} **|** ${message!}`);

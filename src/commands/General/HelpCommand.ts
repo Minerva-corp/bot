@@ -4,6 +4,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { AutocompleteInteraction, EmbedFieldData, Message, MessageActionRow, MessageButton, MessageEmbed, User } from 'discord.js';
 import Fuse from 'fuse.js';
 import { SUPPORT_SERVER } from '#root/config';
+import { Check_Mark, SadIcon, SlashCommandsIcon } from '#root/lib/types/declarations/emotes';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'help',
@@ -30,10 +31,15 @@ export class HelpCommand extends MinervaCommand {
 		const command = this.container.stores.get('commands').get(cmd.value ?? '') as MinervaCommand | undefined;
 		const embed = this.RunCommand(context, message.author, command);
 
-		await message.reply({
-			embeds: [embed],
-			components: [this.GetButton()]
-		});
+		if(cmd.value) {
+			await message.reply({ embeds: [this.SearchCommand(context, message.author, command)] })
+		} else {
+			await message.author.send({
+				embeds: [embed],
+				components: [this.GetButton()]
+			});
+			await message.react('📬')
+		}
 	}
 
 	public override async chatInputRun(interaction: MinervaCommand.Interaction, context: MinervaCommand.SlashCommandContext) {
@@ -41,10 +47,15 @@ export class HelpCommand extends MinervaCommand {
 		const command = this.container.stores.get('commands').get(cmd ?? '') as MinervaCommand | undefined;
 		const embed = this.RunCommand(context, interaction.user, command);
 
-		await interaction.reply({
-			embeds: [embed],
-			components: [this.GetButton()]
-		});
+		if(cmd) {
+			await interaction.reply({ embeds: [this.SearchCommand(context, interaction.user, command)] });
+		} else {
+			await interaction.user.send({
+				embeds: [embed],
+				components: [this.GetButton()]
+			})
+			await interaction.reply(`${Check_Mark} Your help message successfully send to the **__Direct Message__** !`)
+		}
 	}
 
 	public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
@@ -77,39 +88,59 @@ export class HelpCommand extends MinervaCommand {
 		command?: MinervaCommand
 	): MessageEmbed {
 		const embed = new MessageEmbed()
-			.setTitle(`Help Command - ${user.tag}`)
+			.setAuthor({ name: `Full Command - ${user.tag}`, iconURL: command?.client.user?.displayAvatarURL({ dynamic: true }) })
+			.setDescription(`Use ${SlashCommandsIcon} Slash commands or Text command chose your options!`)
 			.setColor('BLUE')
 			.setThumbnail(this.client.user?.displayAvatarURL({ dynamic: true }) as string)
 			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp();
 
-		if (command) {
+
+		const isOwner = this.client.isOwner(user.id);
+		const commands = [...this.container.stores.get('commands').values()] as MinervaCommand[];
+		let categories = [...new Set(commands.map((c) => c.category ?? 'default'))];
+
+		if (!isOwner) {
+			categories = categories.filter((c) => c.toLowerCase() !== 'developers');
+		}
+
+		const fields: EmbedFieldData[] = categories.map((category) => {
+			const valid = commands.filter((c) => c.category === category);
+			const filtered = isOwner ? valid : valid.filter((c) => !c.hidden || !c.OwnerOnly);
+
+			return {
+				name: `**__${category}__**`,
+				value: filtered.map((c) => `\`${c.name ?? c.aliases[0] ?? 'Unknown'}\``).join(', ')
+			};
+		});
+
+		embed.setFields(fields);
+		return embed;
+	}
+
+	private SearchCommand(
+		context: MinervaCommand.MessageContext | MinervaCommand.SlashCommandContext,
+		user: User,
+		command ?: MinervaCommand
+	): MessageEmbed {
+		const embed = new MessageEmbed()
+			.setAuthor({ name: `Information Command for - ${context.commandName}` })
+			.setColor('YELLOW')
+			.setThumbnail(this.client.user?.displayAvatarURL({ dynamic: true }) as string)
+			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+
+		if(command) {
 			embed.addField('Name', `**\`${command.name}**\``, false);
 			embed.addField('Description', `${command.description}`, true);
 			embed.addField('Category', `**\`${command.category}**\``, false);
 			embed.addField('Aliases', `${command.aliases.length ? command.aliases.map((a) => `**\`${a}\`**`).join(', ') : 'None'}`, false);
 		} else {
-			const isOwner = this.client.isOwner(user.id);
-			const commands = [...this.container.stores.get('commands').values()] as MinervaCommand[];
-			let categories = [...new Set(commands.map((c) => c.category ?? 'default'))];
-
-			if (!isOwner) {
-				categories = categories.filter((c) => c.toLowerCase() !== 'developers');
-			}
-
-			const fields: EmbedFieldData[] = categories.map((category) => {
-				const valid = commands.filter((c) => c.category === category);
-				const filtered = isOwner ? valid : valid.filter((c) => !c.hidden || !c.OwnerOnly);
-
-				return {
-					name: `**__${category}__**`,
-					value: filtered.map((c) => `\`${c.name ?? c.aliases[0] ?? 'Unknown'}\``).join(', ')
-				};
-			});
-
-			embed.setFields(fields);
+			embed.setAuthor(null)
+			embed.setThumbnail('')
+			embed.setFooter(null)
+			embed.setDescription(`${SadIcon} - Upss, I can't find thats commands!`)
 		}
-
+		
 		return embed;
 	}
 }

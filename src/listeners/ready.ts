@@ -2,7 +2,7 @@ import { Listener, Events } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { env } from '#root/config';
 import { createConnection } from 'typeorm';
-import { GuildEntities } from '#database/entities/index';
+import { GuildEntities, AfkEntities } from '#database/entities/index';
 
 @ApplyOptions<Listener.Options>({ once: true })
 export class ReadyListener extends Listener<typeof Events.ClientReady> {
@@ -10,7 +10,7 @@ export class ReadyListener extends Listener<typeof Events.ClientReady> {
 		await createConnection({
 			type: 'mongodb',
 			database: env.MONGO_DATABASE,
-			entities: [GuildEntities],
+			entities: [GuildEntities, AfkEntities],
 			url: env.MONGO_URL,
 			useUnifiedTopology: true
 		})

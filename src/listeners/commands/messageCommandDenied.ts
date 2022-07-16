@@ -1,3 +1,4 @@
+import { createEmbed } from '#root/lib/utils/createEmbed';
 import { Events, Listener, MessageCommandDeniedPayload, UserError } from '@sapphire/framework';
 
 export class MessageCommandDenied extends Listener<typeof Events.MessageCommandDenied> {
@@ -8,7 +9,7 @@ export class MessageCommandDenied extends Listener<typeof Events.MessageCommandD
 		}
 
 		return payload.message.reply({
-			content,
+			embeds: [createEmbed("error", content, true)],
 			allowedMentions: { repliedUser: true }
 		});
 	}

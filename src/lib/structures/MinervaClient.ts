@@ -1,13 +1,14 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import * as BotConfig from '#root/config';
 import type { BitFieldResolvable, IntentsString, PartialTypes } from 'discord.js';
-import { GuildRepository } from '#database/repository/index';
+import { GuildRepository, AfkRepository } from '#database/repository/index';
 
 export class MinervaClient extends SapphireClient {
 	public config = BotConfig;
 
 	public override databases = {
-		guilds: new GuildRepository()
+		guilds: new GuildRepository(),
+		afk: new AfkRepository()
 	};
 
 	public constructor(options: clientOptions) {
@@ -41,6 +42,7 @@ declare module '@sapphire/framework' {
 	export interface SapphireClient {
 		databases: {
 			guilds: GuildRepository;
+			afk: AfkRepository;
 		};
 	}
 }

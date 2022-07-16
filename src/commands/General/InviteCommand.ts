@@ -1,3 +1,4 @@
+import { InviteIcon } from '#root/lib/types/declarations/emotes';
 import { MinervaCommand } from '#structures/MinervaCommand';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
@@ -13,11 +14,11 @@ import { Message, MessageActionRow, MessageButton } from 'discord.js';
 })
 export class InviteCommand extends MinervaCommand {
 	public override async messageRun(message: Message): Promise<void> {
-		await message.reply({ content: '😁 Click the button below for the invitation link.', components: [this.getButton()] });
+		await message.reply({ content: `${InviteIcon} - Click the button below for the invitation link.`, components: [this.getButton()] });
 	}
 
 	public override async chatInputRun(interaction: MinervaCommand.Interaction): Promise<void> {
-		await interaction.reply({ content: '😁 Click the button below for the invitation link.', components: [this.getButton()] });
+		await interaction.reply({ content: `${InviteIcon} - Click the button below for the invitation link.`, components: [this.getButton()] });
 	}
 
 	private getButton() {
