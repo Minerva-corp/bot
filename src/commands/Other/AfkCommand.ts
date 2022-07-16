@@ -15,6 +15,8 @@ export class AfkCommand extends MinervaCommand {
 
         if(data && data.isAfk) return message.reply(`${CatNo} - You're already __AFK__!`)
 
+        if(message.member?.manageable) { message.member.setNickname(`[AFK] ${message.author.username}`) }
+    
         await this.client.databases.afk.set(message.guildId as string, message.author.id as string, 'isAfk', true)
         await this.client.databases.afk.set(message.guildId as string, message.author.id as string, 'AfkReason', reason.value || 'No Reason')
         await this.client.databases.afk.set(message.guildId as string, message.author.id as string, 'AfkDate', Date.now())

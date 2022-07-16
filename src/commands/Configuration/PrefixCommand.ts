@@ -31,7 +31,7 @@ export class PrefixCommand extends MinervaCommand {
 	public async list(message: Message, args: Args) {
 		await message.reply({
 			embeds: [
-				createEmbed('info', `Type \`${args.commandContext.prefix}prefix <option>\` to view more about an option. Available options :`)
+				createEmbed('info', `Type \`${args.commandContext.prefix}prefix <option>\` to view more about an option. Available options :`, true)
 					.addField('set', `${args.commandContext.commandPrefix}prefix set [args]`, true)
 					.addField('reset', `${args.commandContext.commandPrefix}prefix reset`, true)
 			]
@@ -40,7 +40,7 @@ export class PrefixCommand extends MinervaCommand {
 
 	public async set(message: Message, args: Args) {
 		const prefixValue = await args.pickResult('string');
-		if (!prefixValue) {
+		if (!prefixValue.value) {
 			return message.reply({ content: `Please input the value of the prefix curent prefix is \`${args.commandContext.prefix}\`` });
 		}
 
@@ -54,7 +54,7 @@ export class PrefixCommand extends MinervaCommand {
 	public async reset(message: Message, args: Args) {
 		await this.container.client.databases.guilds.set(message.guild?.id as string, 'prefix', this.client.config.env.PREFIX);
 		await message.reply({
-			embeds: [createEmbed('success', `Succesfully reset the prefix, current prefix is \`${this.client.config.env.PREFIX}`, true)]
+			embeds: [createEmbed('success', `Succesfully reset the prefix, current prefix is \`${this.client.config.env.PREFIX}\``, true)]
 		});
 	}
 
@@ -80,7 +80,7 @@ export class PrefixCommand extends MinervaCommand {
 							.setName("reset")
 							.setDescription("Reset the prefix value to default value")
 					),
-				{ idHints: [], guildIds: [this.client.config.env.DEV_SERVER_ID] }
+				{ idHints: [], guildIds: [] }
 		)
 	}
 }

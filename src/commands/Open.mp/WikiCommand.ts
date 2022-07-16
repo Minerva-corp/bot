@@ -33,7 +33,7 @@ export class WikiCommand extends MinervaCommand {
 		response.hits.forEach((hit: any) => {
 			hits.push(`${hyperlink(hit.title, `https://open.mp/${hit.url}`)}: ${hit.desc}`);
 		});
-		interaction.reply({ embeds: [createEmbed('info', `Results of **__${docsName}__**\n\n${hits.slice(0, 4).join('\n').toString()}`)] });
+		interaction.reply({ embeds: [createEmbed('info', `Results of **__${docsName}__**\n\n${hits.slice(0, 4).join('\n').toString()}`, true)] });
 	}
 
 	public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {

@@ -8,7 +8,7 @@ export class MinervaClient extends SapphireClient {
 
 	public override databases = {
 		guilds: new GuildRepository(),
-		afk: new AfkRepository()
+		afk: new AfkRepository(),
 	};
 
 	public constructor(options: clientOptions) {
