@@ -31,14 +31,14 @@ export class HelpCommand extends MinervaCommand {
 		const command = this.container.stores.get('commands').get(cmd.value ?? '') as MinervaCommand | undefined;
 		const embed = this.RunCommand(context, message.author, command);
 
-		if(cmd.value) {
-			await message.reply({ embeds: [this.SearchCommand(context, message.author, command)] })
+		if (cmd.value) {
+			await message.reply({ embeds: [this.SearchCommand(context, message.author, command)] });
 		} else {
 			await message.author.send({
 				embeds: [embed],
 				components: [this.GetButton()]
 			});
-			await message.react('📬')
+			await message.react('📬');
 		}
 	}
 
@@ -47,14 +47,14 @@ export class HelpCommand extends MinervaCommand {
 		const command = this.container.stores.get('commands').get(cmd ?? '') as MinervaCommand | undefined;
 		const embed = this.RunCommand(context, interaction.user, command);
 
-		if(cmd) {
+		if (cmd) {
 			await interaction.reply({ embeds: [this.SearchCommand(context, interaction.user, command)] });
 		} else {
 			await interaction.user.send({
 				embeds: [embed],
 				components: [this.GetButton()]
-			})
-			await interaction.reply(`${Check_Mark} Your help message successfully send to the **__Direct Message__** !`)
+			});
+			await interaction.reply(`${Check_Mark} Your help message successfully send to the **__Direct Message__** !`);
 		}
 	}
 
@@ -95,7 +95,6 @@ export class HelpCommand extends MinervaCommand {
 			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp();
 
-
 		const isOwner = this.client.isOwner(user.id);
 		const commands = [...this.container.stores.get('commands').values()] as MinervaCommand[];
 		let categories = [...new Set(commands.map((c) => c.category ?? 'default'))];
@@ -121,26 +120,26 @@ export class HelpCommand extends MinervaCommand {
 	private SearchCommand(
 		context: MinervaCommand.MessageContext | MinervaCommand.SlashCommandContext,
 		user: User,
-		command ?: MinervaCommand
+		command?: MinervaCommand
 	): MessageEmbed {
 		const embed = new MessageEmbed()
 			.setAuthor({ name: `Information Command for - ${context.commandName}` })
 			.setColor('YELLOW')
 			.setThumbnail(this.client.user?.displayAvatarURL({ dynamic: true }) as string)
-			.setFooter({ text: `<> = required | [] = optional` })
+			.setFooter({ text: `<> = required | [] = optional` });
 
-		if(command) {
+		if (command) {
 			embed.addField('Name', `**\`${command.name}**\``, false);
 			embed.addField('Description', `${command.description}`, true);
 			embed.addField('Category', `**\`${command.category}**\``, false);
 			embed.addField('Aliases', `${command.aliases.length ? command.aliases.map((a) => `**\`${a}\`**`).join(', ') : 'None'}`, false);
 		} else {
-			embed.setAuthor(null)
-			embed.setThumbnail('')
-			embed.setFooter(null)
-			embed.setDescription(`${SadIcon} - Upss, I can't find thats commands!`)
+			embed.setAuthor(null);
+			embed.setThumbnail('');
+			embed.setFooter(null);
+			embed.setDescription(`${SadIcon} - Upss, I can't find thats commands!`);
 		}
-		
+
 		return embed;
 	}
 }

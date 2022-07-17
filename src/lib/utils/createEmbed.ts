@@ -7,7 +7,7 @@ const hexColors: Record<hexColorsType, ColorResolvable> = {
 	info: 'BLUE',
 	success: 'GREEN',
 	warn: 'YELLOW',
-	loading: "WHITE"
+	loading: 'WHITE'
 };
 
 export function createEmbed(type: hexColorsType, message?: string, emoji = false): MessageEmbed {
@@ -16,11 +16,11 @@ export function createEmbed(type: hexColorsType, message?: string, emoji = false
 	if (message) {
 		embed.setDescription(message);
 	}
-	if(type === 'info' && emoji) {
-		embed.setDescription(`${Info_Mark} **|** ${message}`)
+	if (type === 'info' && emoji) {
+		embed.setDescription(`${Info_Mark} **|** ${message}`);
 	}
-	if(type === 'loading' && emoji) {
-		embed.setDescription(`${Loading_Mark} **|** ${message}`)
+	if (type === 'loading' && emoji) {
+		embed.setDescription(`${Loading_Mark} **|** ${message}`);
 	}
 	if (type === 'error' && emoji) {
 		embed.setDescription(`${Error_Mark} **|** ${message!}`);

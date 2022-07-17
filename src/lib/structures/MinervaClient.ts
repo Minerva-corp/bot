@@ -11,14 +11,14 @@ export class MinervaClient extends SapphireClient {
 
 	public override databases = {
 		guilds: new GuildRepository(),
-		afk: new AfkRepository(),
+		afk: new AfkRepository()
 	};
 
 	public constructor(options: clientOptions) {
 		super({
 			ws: {
 				properties: {
-					browser: "Discord iOS"
+					browser: 'Discord iOS'
 				}
 			},
 			intents: options.intents,
@@ -56,4 +56,3 @@ declare module '@sapphire/framework' {
 		};
 	}
 }
-

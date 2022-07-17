@@ -14,12 +14,12 @@ export const env = cleanEnv(process.env, {
 });
 
 export const presenceData: PresenceData = {
-    activities: [
-        { name: "💘 - {userCount} & {serverCount}!", type: "COMPETING" },
-		{ name: "Happy {whatDays}!", type: "LISTENING" }
-    ],
-    status: ["online"],
-    interval: 60000
+	activities: [
+		{ name: '💘 - {userCount} & {serverCount}!', type: 'COMPETING' },
+		{ name: 'Happy {whatDays}!', type: 'LISTENING' }
+	],
+	status: ['online'],
+	interval: 60_000
 };
 
 export const BOT_OWNER: string[] = parseEnvValue(process.env.DEV_ID ?? '');

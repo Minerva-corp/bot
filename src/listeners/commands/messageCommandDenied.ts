@@ -9,7 +9,7 @@ export class MessageCommandDenied extends Listener<typeof Events.MessageCommandD
 		}
 
 		return payload.message.reply({
-			embeds: [createEmbed("error", content, true)],
+			embeds: [createEmbed('error', content, true)],
 			allowedMentions: { repliedUser: true }
 		});
 	}

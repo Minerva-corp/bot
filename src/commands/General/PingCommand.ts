@@ -18,12 +18,12 @@ export class PingCommand extends MinervaCommand {
 		const pingMessage = await message.reply(`Ping?`);
 		const after = Date.now() - before;
 		const embed = this.RunCommand(after.toString(), message.author);
-		await pingMessage.edit({ embeds: [embed], content: ' ' })
+		await pingMessage.edit({ embeds: [embed], content: ' ' });
 	}
 
 	public override async chatInputRun(interaction: MinervaCommand.Interaction): Promise<void> {
-		const before = Date.now()
-		await interaction.reply({ content: `Ping?` })
+		const before = Date.now();
+		await interaction.reply({ content: `Ping?` });
 		const after = Date.now() - before;
 		const embed = this.RunCommand(after.toString(), interaction.user);
 		await interaction.editReply({ embeds: [embed], content: ' ' });
@@ -36,9 +36,9 @@ export class PingCommand extends MinervaCommand {
 			.setTitle(`🏓 Pong!`)
 			.addFields(
 				{
-					name: "📶 **|** API",
-                    value: `**\`${latency}\`** ms`,
-                    inline: true
+					name: '📶 **|** API',
+					value: `**\`${latency}\`** ms`,
+					inline: true
 				},
 				{
 					name: `🌐 **|** WebSocket`,

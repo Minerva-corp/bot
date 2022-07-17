@@ -15,9 +15,9 @@ export class AfkEntities {
 	@Column('boolean')
 	public isAfk!: boolean;
 
-    @Column('string')
-    public AfkReason!: string;
+	@Column('string')
+	public AfkReason!: string;
 
-    @Column('date')
-    public AfkDate!: string;
+	@Column('date')
+	public AfkDate!: string;
 }

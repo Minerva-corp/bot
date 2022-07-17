@@ -3,8 +3,10 @@ import { bold, green } from 'colorette';
 
 export class MessageCommandSuccess extends Listener<typeof Events.MessageCommandSuccess> {
 	public run(payload: MessageCommandSuccessPayload) {
-		const author = payload.message.author;
-		const message = `${green(bold(`[${payload.context.prefix}${payload.command.name}]`))} - MessageCommand executed by ${author.tag} (${author.id})`;
+		const { author } = payload.message;
+		const message = `${green(bold(`[${payload.context.prefix}${payload.command.name}]`))} - MessageCommand executed by ${author.tag} (${
+			author.id
+		})`;
 		this.container.logger.debug(message);
 	}
 

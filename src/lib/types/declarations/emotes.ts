@@ -1,6 +1,5 @@
 export const ExtractEmojiIdRegex = /<a?:_:(?<id>\d{17,18})>/;
 
-
 export const Check_Mark = '<a:__:997916639616041020>' as const;
 export const Error_Mark = '<:_:997528546715119717>' as const;
 export const Info_Mark = '<a:__:997807018867970068>' as const;
