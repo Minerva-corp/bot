@@ -19,7 +19,7 @@ export default class extends Listener<typeof Events.MessageCreate> {
 				return;
 			}
 			await message.reply(
-				`**${target.nickname}** is currently AFK - [<t:${Math.floor(Number.parseInt(data.AfkDate) / 1000)}:R>]. ${data.AfkReason}`
+				`**${target.nickname}** is currently AFK - [${this.client.utils.formatEpochTime(Math.floor(Number.parseInt(data.AfkDate) / 1000), "R")}]. ${data.AfkReason}`
 			);
 		}
 	}

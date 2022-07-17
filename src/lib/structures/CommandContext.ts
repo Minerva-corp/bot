@@ -1,21 +1,26 @@
-import { ButtonInteraction, CommandInteraction, ContextMenuInteraction, Interaction, InteractionReplyOptions, Message, MessageActionRow, MessageButton, MessageOptions, MessagePayload, SelectMenuInteraction } from "discord.js";
-import { InteractionTypes, MessageComponentTypes, MessageInteractionAction } from "#types/declarations/constants";
 import type { Args } from "@sapphire/framework";
+import { CommandInteraction, InteractionReplyOptions, Message, MessagePayload, MessageOptions, ButtonInteraction, SelectMenuInteraction, InteractionType, Interaction, MessageActionRow, MessageButton, ModalSubmitInteraction } from "discord.js";
 
-export class CommandContext {    
-    public constructor(public readonly context:
-        | CommandInteraction<"cached">
-        | ContextMenuInteraction
-        | Interaction
-        | Message
-        | SelectMenuInteraction,
-        public args: Args
-    ) {}
+export enum MessageComponentTypes {
+    ACTION_ROW = 1,
+    BUTTON = 2,
+    SELECT_MENU = 3
+}
 
+export enum InteractionTypes {
+    PING = 1,
+    APPLICATION_COMMAND = 2,
+    MESSAGE_COMPONENT = 3,
+    APPLICATION_COMMAND_AUTOCOMPLETE = 4
+}
 
+export type MessageInteractionAction = "editReply" | "followUp" | "reply";
+
+export class CommandContext {
     public author = this.isInteraction() ? (this.context as Interaction).user : (this.context as Message).author;
     public channel = this.context.channel;
     public options = this.context instanceof CommandInteraction ? this.context.options : undefined;
+    public constructor(public readonly context: CommandInteraction<"cached"> | Message, public args?: Args) {}
 
     public async deferReply(): Promise<void> {
         if (this.isInteraction()) {
@@ -26,19 +31,20 @@ export class CommandContext {
 
     public async reply(
         options:
-        | InteractionReplyOptions
-        | MessageOptions
-        | MessagePayload
-        | string,
+            | InteractionReplyOptions
+            | MessageOptions
+            | MessagePayload
+            | string
+            | { askDeletion?: { reference: string } },
         autoedit?: boolean
-    ): Promise<Message | void> {
+    ): Promise<Message> {
         if (this.isInteraction()) {
             if (
                 ((this.context as Interaction).isCommand() || (this.context as Interaction).isSelectMenu()) &&
                 (this.context as CommandInteraction).replied &&
                 !autoedit
             )
-                this.context.client.logger.fatal('Interaction is already replied.')
+                throw new Error("Interaction is already replied.");
         }
 
         const context = this.context as CommandInteraction | Message | SelectMenuInteraction;
@@ -53,9 +59,10 @@ export class CommandContext {
                 : "reply"
         ).catch(e => ({ error: e }));
         if (!rep || "error" in rep) {
-            this.context.client.logger.fatal(`Unable to reply context, because: ${rep ? (rep.error as Error).message : "Unknown"}`)
+            throw new Error(`Unable to reply context, because: ${rep ? (rep.error as Error).message : "Unknown"}`);
         }
-         // @ts-expect-error-next-line
+
+        // @ts-expect-error-next-line
         return rep instanceof Message ? rep : new Message(this.context.client, rep);
     }
 
@@ -67,8 +74,8 @@ export class CommandContext {
             | string
             | { askDeletion?: { reference: string } },
         type: MessageInteractionAction = "editReply"
-    ): Promise<Message| void> {
-        const deletionBtn = new MessageActionRow().addComponents(new MessageButton().setLabel('REMOVE').setEmoji("🗑️").setStyle("DANGER"));
+    ): Promise<Message> {
+        const deletionBtn = new MessageActionRow().addComponents(new MessageButton().setEmoji("🚮").setStyle("DANGER"));
         if ((options as { askDeletion?: { reference: string } }).askDeletion) {
             deletionBtn.components[0].setCustomId(
                 Buffer.from(
@@ -90,7 +97,7 @@ export class CommandContext {
             return res ?? msg;
         }
         if ((options as InteractionReplyOptions).ephemeral) {
-            this.context.client.logger.fatal("Cannot send ephemeral message in a non-interaction context.");
+            throw new Error("Cannot send ephemeral message in a non-interaction context.");
         }
         return this.context.channel!.send(options as MessageOptions | MessagePayload | string);
     }
@@ -116,6 +123,10 @@ export class CommandContext {
     public isMessageComponent(): boolean {
         // @ts-expect-error-next-line
         return InteractionTypes[this.context.type] === InteractionTypes.MESSAGE_COMPONENT;
+    }
+
+    public isModalComponent(): boolean {
+        return this.context instanceof ModalSubmitInteraction;
     }
 
     public isButton(): boolean {

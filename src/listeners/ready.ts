@@ -46,9 +46,11 @@ export class ReadyListener extends Listener<typeof Events.ClientReady> {
 
 			newText = newText.replace(/{serverCount}/g, guilds.toString());
 		}
-
 		if (text.includes('{whatDays}')) {
 			newText = newText.replace(/{whatDays}/g, (await this.getDays()).toString());
+		}
+		if (text.includes('{nowAmOrPm}')) {
+			newText = newText.replace(/{nowAmOrPm}/g, (await this.client.utils.formatAmPm(new Date())));
 		}
 
 		return newText.replace(/{prefix}/g, env.PREFIX).replace(/{username}/g, this.client.user!.username);

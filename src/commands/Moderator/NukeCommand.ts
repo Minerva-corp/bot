@@ -5,7 +5,7 @@ import { GuildChannel, MessageActionRow, MessageButton } from 'discord.js';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'nuke',
-	description: 'Nuke a some channel',
+	description: '💥Nuke a some channel',
 	requiredClientPermissions: ['MANAGE_CHANNELS'],
 	requiredUserPermissions: ['MANAGE_CHANNELS'],
 	chatInputCommand: {

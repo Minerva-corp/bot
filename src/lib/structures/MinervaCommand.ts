@@ -24,6 +24,7 @@ export abstract class MinervaCommand extends SubCommandPluginCommand<CommandArgs
 	public readonly clientPermissions: PermissionResolvable;
 
 	public override client: MinervaClient;
+	static CommandContext: any;
 
 	public constructor(context: CTX, options: MinervaCommand.Options) {
 		super(context, {
@@ -50,11 +51,10 @@ export abstract class MinervaCommand extends SubCommandPluginCommand<CommandArgs
 			return;
 		}
 
-		const guildIds = [this.client.config.env.DEV_SERVER_ID as string].filter((str) => typeof str === 'string' && str.length);
+		//const guildIds = [this.client.config.env.DEV_SERVER_ID as string].filter((str) => typeof str === 'string' && str.length);
 		const options: ApplicationCommandRegistryRegisterOptions = {
 			/* eslint no-restricted-globals: 0 */
 			behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-			guildIds: process.env.NODE_ENV === 'development' || this.OwnerOnly ? guildIds : undefined
 		};
 
 		if (this.options.chatInputCommand.messageCommand) {
@@ -95,7 +95,7 @@ export namespace MinervaCommand {
 		};
 	};
 
-	export type Interaction<Cache extends CacheType = CacheType> = CommandInteraction<Cache>;
+	export type Interaction<Cache extends CacheType = CacheType> = CommandInteraction<"cached">;
 	export type Registry = ChatInputCommand.Registry;
 	export type MessageContext = MessageCommandContext;
 	export type SlashCommandContext = ChatInputCommandContext;

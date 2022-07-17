@@ -9,7 +9,7 @@ import { Check_Mark, SadIcon, SlashCommandsIcon } from '#root/lib/types/declarat
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'help',
 	aliases: ['commands'],
-	description: 'A list of all the commands',
+	description: '📚 View a help for the commands',
 	requiredClientPermissions: ['EMBED_LINKS'],
 	chatInputCommand: {
 		messageCommand: true,

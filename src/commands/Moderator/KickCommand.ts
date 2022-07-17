@@ -6,7 +6,7 @@ import type { GuildMember, GuildMemberRoleManager, Message } from 'discord.js';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'kick',
-	description: 'Kick user from the Server',
+	description: '👤Kick user from the Server',
 	requiredClientPermissions: ['KICK_MEMBERS'],
 	requiredUserPermissions: ['KICK_MEMBERS'],
 	chatInputCommand: {

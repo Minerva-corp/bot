@@ -28,6 +28,7 @@
     "@sapphire/decorators": "^4.3.8",
     "@sapphire/discord.js-utilities": "^4.11.3",
     "@sapphire/framework": "next",
+    "@sapphire/plugin-editable-commands": "^1.2.2",
     "@sapphire/plugin-logger": "^2.2.3",
     "@sapphire/plugin-subcommands": "^2.2.2",
     "@sapphire/stopwatch": "^1.4.1",

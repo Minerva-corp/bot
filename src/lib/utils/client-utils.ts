@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import type { MinervaClient } from '../structures/MinervaClient';
 import prettyMilliseconds from 'pretty-ms';
-import type { CommandInteraction, Message } from 'discord.js';
+import { CommandInteraction, Guild, Message } from 'discord.js';
 
 export class ClientUtils {
 	public constructor(public readonly client: MinervaClient) {}
@@ -9,6 +9,52 @@ export class ClientUtils {
 	public decode(string: string): string {
         return Buffer.from(string, "base64").toString("ascii");
     }
+
+	public async fetchMember(id: string, guild: Guild | null | undefined) {
+		const resolve = () => {
+			if (!guild) return undefined;
+
+			const { cache } = guild.members;
+			return (
+				cache.get(id) ||
+				cache.find(
+					(member) =>
+						member.nickname === id ||
+						member.toString() === id ||
+						member.user.tag === id ||
+						member.user.username === id ||
+						member.user.toString() === id
+				)
+			);
+		};
+
+		return typeof id === "string" && guild instanceof Guild ? resolve() || guild.members.fetch(id).catch(() => null) : null;
+	}
+	
+	public formatEpochTime(time: number | string, type: "t" | "T" | "d" | "D" | "f" | "F" | "R"): string {
+		return `<t:${time}:${type}>`;
+	}
+
+	public async formatAmPm(currentDate: Date) {
+		let 
+			hours = currentDate.getHours(),
+			minutes: string | number = currentDate.getMinutes();
+
+		const ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+		minutes = minutes < 10 ? '0'+ minutes : minutes;
+		return hours + ':' + minutes + ' ' + ampm;
+	}
+
+	public async fetchUser(id: string) {
+		const resolve = () => {
+			const { cache } = this.client.users;
+			return cache.get(id) || cache.find((user) => user.tag === id || user.username === id || user.toString() === id);
+		};
+
+		return typeof id === "string" ? resolve() || this.client.users.fetch(id).catch(() => null) : null;
+	}
 
 	public atob(str: string): string {
 		return Buffer.from(str, 'base64').toString('ascii');

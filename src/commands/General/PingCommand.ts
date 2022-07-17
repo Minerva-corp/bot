@@ -1,7 +1,7 @@
+import { CommandContext } from '#root/lib/structures/CommandContext';
 import { MinervaCommand } from '#structures/MinervaCommand';
-import { createEmbed } from '#utils/createEmbed';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { ColorResolvable, Message, MessageEmbed, User } from 'discord.js';
+import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'ping',
@@ -13,69 +13,67 @@ import type { ColorResolvable, Message, MessageEmbed, User } from 'discord.js';
 	}
 })
 export class PingCommand extends MinervaCommand {
-	public override async messageRun(message: Message): Promise<void> {
-		const before = Date.now();
-		const pingMessage = await message.reply(`Ping?`);
-		const after = Date.now() - before;
-		const embed = this.RunCommand(after.toString(), message.author);
-		await pingMessage.edit({ embeds: [embed], content: ' ' });
-	}
+	public messageRun(message: Message): any {
+        return this.run(new CommandContext(message));
+    }
 
-	public override async chatInputRun(interaction: MinervaCommand.Interaction): Promise<void> {
-		const before = Date.now();
-		await interaction.reply({ content: `Ping?` });
-		const after = Date.now() - before;
-		const embed = this.RunCommand(after.toString(), interaction.user);
-		await interaction.editReply({ embeds: [embed], content: ' ' });
-	}
+    public chatInputRun(interaction: MinervaCommand.Interaction<"cached">): any {
+        return this.run(new CommandContext(interaction));
+    }
 
-	private RunCommand(latency: string, user: User): MessageEmbed {
-		const wsLatency = this.client.ws.ping.toFixed(0);
-		const embed = createEmbed('info')
-			.setColor(this.searchHex(wsLatency))
-			.setTitle(`🏓 Pong!`)
-			.addFields(
-				{
-					name: '📶 **|** API',
-					value: `**\`${latency}\`** ms`,
-					inline: true
-				},
-				{
-					name: `🌐 **|** WebSocket`,
-					value: `**\`${wsLatency}\`** ms`,
-					inline: true
-				}
-			)
-			.setFooter({ text: `Request by ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-			.setTimestamp();
+    public run(ctx: CommandContext): any {
+        ctx.reply({ content: "🏓 Pong!", fetchReply: true }).then(msg => {
+            const wsLatency = this.container.client.ws.ping.toFixed(0);
+            if (msg) {
+                const latency = msg.createdTimestamp - ctx.context.createdTimestamp;
+                msg.edit({
+                    content: " ",
+                    embeds: [
+                        new MessageEmbed()
+                            .setAuthor({ name: "🏓 PONG!", iconURL: this.container.client.user!.displayAvatarURL() })
+                            .setColor(PingCommand.searchHex(wsLatency))
+                            .addFields({
+                                name: "📶 API Latency",
+                                value: `**\`${latency}\`** ms`,
+                                inline: true
+                            }, {
+                                name: "🌐 WebSocket Latency",
+                                value: `**\`${wsLatency}\`** ms`,
+                                inline: true
+                            })
+                            .setFooter({ text: `Requested by: ${ctx.author.tag}`, iconURL: ctx.author.displayAvatarURL({ dynamic: true }) })
+                            .setTimestamp()
+                    ]
+                }).catch(e => this.container.logger.error(e));
+            }
+        }).catch(e => this.container.logger.error(e));
+    }
 
-		return embed;
-	}
+    private static searchHex(ms: number | string): ColorResolvable {
+        const listColorHex = [
+            [0, 20, "#0DFF00"],
+            [21, 50, "#0BC700"],
+            [51, 100, "#E5ED02"],
+            [101, 150, "#FF8C00"],
+            [150, 200, "#FF6A00"]
+        ];
 
-	private searchHex(ms: number | string): ColorResolvable {
-		const listColorHex = [
-			[0, 20, 'GREEN'],
-			[21, 50, 'GREEN'],
-			[51, 100, 'YELLOW'],
-			[101, 150, 'YELLOW'],
-			[150, 200, 'RED']
-		];
+        const defaultColor = "#FF0D00";
 
-		const defaultColor = 'RED';
+        const min = listColorHex.map(e => e[0]);
+        const max = listColorHex.map(e => e[1]);
+        const hex = listColorHex.map(e => e[2]);
+        let ret: number | string = "#000000";
 
-		const min = listColorHex.map((e) => e[0]);
-		const max = listColorHex.map((e) => e[1]);
-		const hex = listColorHex.map((e) => e[2]);
-		let ret: number | string = '#000000';
+        for (let i = 0; i < listColorHex.length; i++) {
+            if (min[i] <= ms && ms <= max[i]) {
+                ret = hex[i];
+                break;
+            } else {
+                ret = defaultColor;
+            }
+        }
+        return ret as ColorResolvable;
+    }
 
-		for (let i = 0; i < listColorHex.length; i++) {
-			if (min[i] <= ms && ms <= max[i]) {
-				ret = hex[i];
-				break;
-			} else {
-				ret = defaultColor;
-			}
-		}
-		return ret as ColorResolvable;
-	}
 }

@@ -5,7 +5,7 @@ import type { Message } from "discord.js";
 
 @ApplyOptions<MinervaCommand['options']>({
     name: 'purge',
-    description: 'clear the message',
+    description: 'Clear the message',
     aliases: ['clear', 'prune', 'deletemessage'],
     requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_MESSAGES']
 })

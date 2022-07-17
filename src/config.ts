@@ -16,7 +16,7 @@ export const env = cleanEnv(process.env, {
 export const presenceData: PresenceData = {
 	activities: [
 		{ name: '💘 - {userCount} & {serverCount}!', type: 'COMPETING' },
-		{ name: 'Happy {whatDays}!', type: 'LISTENING' }
+		{ name: '😊 - Happy {whatDays} at {nowAmOrPm}!', type: 'LISTENING' }
 	],
 	status: ['online'],
 	interval: 60_000

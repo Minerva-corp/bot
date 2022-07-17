@@ -9,7 +9,7 @@ import moment from 'moment';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'manga',
-	description: 'Search a manga and returned Specific options.',
+	description: '🔎 Search a manga and returned Specific options.',
 	chatInputCommand: {
 		register: true,
 		messageCommand: true,

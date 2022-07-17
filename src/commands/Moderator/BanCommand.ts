@@ -6,7 +6,7 @@ import type { GuildMember, GuildMemberRoleManager, Message } from 'discord.js';
 
 @ApplyOptions<MinervaCommand['options']>({
 	name: 'ban',
-	description: 'Banned user from the Server',
+	description: '👤Banned user from the Server',
 	requiredClientPermissions: ['BAN_MEMBERS'],
 	requiredUserPermissions: ['BAN_MEMBERS'],
 	chatInputCommand: {

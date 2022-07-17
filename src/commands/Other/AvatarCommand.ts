@@ -1,3 +1,4 @@
+import { CommandContext } from '#root/lib/structures/CommandContext';
 import { MinervaCommand } from '#root/lib/structures/MinervaCommand';
 import { SadIcon } from '#root/lib/types/declarations/emotes';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -28,34 +29,27 @@ export class AvatarCommand extends MinervaCommand {
 			(message.guild?.members.cache.get(userID.value as string) as GuildMember) ||
 			message.member;
 
-		if (!member) {
-			return message.reply({ content: `${SadIcon} - That user was not found!` });
-		}
-
-		await message.reply({
-			embeds: [
-				new MessageEmbed()
-					.setColor('GREY')
-					.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-					.setImage(member.user.displayAvatarURL({ dynamic: true, size: 4096 }))
-			]
-		});
+		return this.run(new CommandContext(message), member);
 	}
 
 	public override async chatInputRun(interaction: MinervaCommand.Interaction) {
-		const member = (interaction.options.getMember('users') as GuildMember) || interaction.member;
+		const member = (interaction.options.getMember('users') as GuildMember) || interaction.member as GuildMember;
 
-		if (!member) {
-			return interaction.reply({ content: `${SadIcon} - That user was not found!` });
+		return this.run(new CommandContext(interaction), member);
+	}
+
+	private run(ctx: CommandContext, user: GuildMember): any {
+		if(!user) {
+			return ctx.reply({ content: `${SadIcon} - The user was not found!` })
 		}
 
-		await interaction.reply({
+		return ctx.reply({ 
 			embeds: [
 				new MessageEmbed()
 					.setColor('GREY')
-					.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-					.setImage(member.user.displayAvatarURL({ dynamic: true, size: 4096 }))
+					.setAuthor({ name: user.user.tag, iconURL: user.user.displayAvatarURL({ dynamic: true }) })
+					.setImage(user.user.displayAvatarURL({ dynamic: true, size: 4096 }))
 			]
-		});
+		})
 	}
 }
