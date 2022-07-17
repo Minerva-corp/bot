@@ -133,6 +133,7 @@ export class MangaCommand extends MinervaCommand {
 					) {
 						return interaction.deleteReply();
 					}
+					return;
 				});
 			});
 	}

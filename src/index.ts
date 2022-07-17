@@ -16,7 +16,7 @@ process.on('rejectionHandled', error => {
 })
 
 process.on('uncaughtException', error => {
-	client.logger.error('uncaughtException promise rejection:', error);
+	client.logger.fatal('uncaughtException promise rejection:', error);
 })
 
 process.on('uncaughtExceptionMonitor', error => {

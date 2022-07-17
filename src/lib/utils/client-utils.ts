@@ -2,12 +2,34 @@
 import { pathToFileURL } from "node:url";
 import { parse } from "node:path";
 import type { MinervaClient } from "../structures/MinervaClient";
+import prettyMilliseconds from "pretty-ms";
 
 export class ClientUtils {
     public constructor(public readonly client: MinervaClient) {}
 
     public atob(str: string): string {
         return Buffer.from(str, "base64").toString("ascii");
+    }
+
+    public async formatDate(dateFormat: Intl.DateTimeFormat, date: Date | number = new Date()): Promise<string> {
+        const data = dateFormat.formatToParts(date);
+        return "<year>-<month>-<day>"
+            .replace(/<year>/g, data.find(d => d.type === "year")!.value)
+            .replace(/<month>/g, data.find(d => d.type === "month")!.value)
+            .replace(/<day>/g, data.find(d => d.type === "day")!.value);
+    }
+
+    public async formatMS(ms: number): Promise<string> {
+        if (isNaN(ms)) throw new Error("value is not a number.");
+        return prettyMilliseconds(ms, {
+            verbose: true,
+            compact: false,
+            secondsDecimalDigits: 0
+        });
+    }
+    
+    public async cleanUrl(url: string) {
+        return /^https?:\/\//i.test(url) ? url : `https://${url}`
     }
 
     public async getUserCount(): Promise<number> {

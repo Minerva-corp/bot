@@ -16,7 +16,8 @@ import { GuildMember, Message, MessageEmbed } from "discord.js";
                 type: 'USER',
                 required: false
             }
-        ]
+        ],
+        contextmenu: "USER"
     }
 })
 

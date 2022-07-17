@@ -6,7 +6,7 @@ import type { AutocompleteInteraction } from 'discord.js';
 import fetch from 'node-fetch';
 
 @ApplyOptions<MinervaCommand['options']>({
-	name: 'wiki',
+	name: 'ompwiki',
 	description: 'Returns a article from open.mp wiki',
 	requiredClientPermissions: ['EMBED_LINKS'],
 	chatInputCommand: {

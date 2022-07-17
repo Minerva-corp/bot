@@ -43,7 +43,10 @@
     "moment": "^2.29.4",
     "mongodb": "^3.7.3",
     "node-fetch": "^3.2.6",
+    "pretty-ms": "^8.0.0",
     "reflect-metadata": "^0.1.13",
+    "samp-query": "^0.1.5",
+    "table": "^6.8.0",
     "typeorm": "^0.3.7"
   },
   "optionalDependencies": {
