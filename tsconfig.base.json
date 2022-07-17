@@ -1,7 +1,7 @@
 {
-	"extends": "@sapphire/ts-config/extra-strict",
+	"extends": "@sapphire/ts-config",
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "ESNext"
+		"target": "ES2021",
+		"module": "ES2022"
 	}
 }

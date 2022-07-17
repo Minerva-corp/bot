@@ -1,14 +1,27 @@
 /* eslint-disable class-methods-use-this */
-import { pathToFileURL } from 'node:url';
-import { parse } from 'node:path';
 import type { MinervaClient } from '../structures/MinervaClient';
 import prettyMilliseconds from 'pretty-ms';
+import type { CommandInteraction, Message } from 'discord.js';
 
 export class ClientUtils {
 	public constructor(public readonly client: MinervaClient) {}
 
+	public decode(string: string): string {
+        return Buffer.from(string, "base64").toString("ascii");
+    }
+
 	public atob(str: string): string {
 		return Buffer.from(str, 'base64').toString('ascii');
+	}
+
+	public async sendTemporaryMessage(message: Message | CommandInteraction, options: string, ms: number): Promise<Message | void> {
+		await message.reply(options)
+			.then((msg) => {
+				setTimeout(() => {
+					//@ts-ignore
+					msg.delete();
+				}, ms);
+			})
 	}
 
 	public async formatDate(dateFormat: Intl.DateTimeFormat, date: Date | number = new Date()): Promise<string> {
@@ -69,12 +82,5 @@ export class ClientUtils {
 		}
 
 		return this.client.guilds.cache.size;
-	}
-
-	public async import<T>(path: string, ...args: any[]): Promise<T | undefined> {
-		const file = await import(pathToFileURL(path).toString()).then(
-			(m) => (m as Record<string, (new (...argument: any[]) => T) | undefined>)[parse(path).name]
-		);
-		return file ? new file(...(args as unknown[])) : undefined;
 	}
 }

@@ -52,7 +52,7 @@ export class SampCommand extends MinervaCommand {
 
 		samp(options, async function (_err: any, response: any) {
 			if (_err) {
-				return interaction.reply({ content: `${SadIcon} - Upsss i have some error or host not found!`, ephemeral: true });
+				return;
 			}
 			const players: any[][] = [];
 			let output;

@@ -24,7 +24,7 @@ process.on('uncaughtExceptionMonitor', (error) => {
 });
 
 try {
-	await client.start();
+	client.start();
 } catch (error) {
 	client.logger.fatal(error);
 	client.destroy();

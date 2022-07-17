@@ -8,7 +8,7 @@ export default defineConfig({
 	minify: false,
 	skipNodeModulesBundle: true,
 	sourcemap: true,
-	target: 'esnext',
+	target: 'es2021',
 	tsconfig: 'src/tsconfig.json',
 	bundle: false,
 	shims: false,
