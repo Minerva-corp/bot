@@ -19,6 +19,7 @@
     "format": "prettier --write \"src/**/*.[jt]s\"",
     "update": "yarn upgrade-interactive",
     "build": "tsup",
+    "postinstall": "tsup",
     "watch": "tsup --watch",
     "dev": "tsup --watch --onSuccess \"yarn start\"",
     "typecheck": "tsc -b src"
