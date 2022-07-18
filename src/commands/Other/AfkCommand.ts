@@ -30,7 +30,8 @@ export class AfkCommand extends MinervaCommand {
 
 	private async run(ctx: CommandContext): Promise<any> {
 		const data = await this.client.databases.afk.get(ctx.context.guildId as string, ctx.author.id as string);
-		const reason = (await ctx.args?.pickResult('string')!).value || ctx.options?.getString('reason')
+		const reasonArgs = await ctx.args?.restResult('string');
+		const reason = reasonArgs?.value ?? ctx.options?.getString('reason', false)
 
 		if (data && data.isAfk) {
 			return ctx.reply({ content: `${CatNo} - You're already __AFK__!` });
