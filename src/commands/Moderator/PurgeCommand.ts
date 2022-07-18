@@ -1,7 +1,8 @@
+import { CommandContext } from "#root/lib/structures/CommandContext";
 import { MinervaCommand } from "#root/lib/structures/MinervaCommand";
 import { CatNo, PepeYes } from "#root/lib/types/declarations/emotes";
 import { ApplyOptions } from "@sapphire/decorators";
-import type { Message } from "discord.js";
+import type { GuildTextBasedChannel, Message } from "discord.js";
 
 @ApplyOptions<MinervaCommand['options']>({
     name: 'purge',
@@ -12,12 +13,20 @@ import type { Message } from "discord.js";
 
 export class PurgeCommand extends MinervaCommand {
     public override async messageRun(message: Message, args: MinervaCommand.Args) {
-        const messageToDeleteArgs = await args.pickResult("number");
+        return this.run(new CommandContext(message, args));
+    }
 
-        if(messageToDeleteArgs.value! > 100) return this.client.utils.sendTemporaryMessage(message, `${CatNo} - You can't clear __${messageToDeleteArgs.value}__ because is higher under 100`, 6000);
-        if (message.channel.isText() && message.inGuild()) {
-            const deletedMessage = await message.channel.bulkDelete(messageToDeleteArgs.value ?? 10, true);
-            await this.client.utils.sendTemporaryMessage(message, `${PepeYes} - Successfully clear **__${deletedMessage.size}__** messages!`, 6000);
+    private async run(ctx: CommandContext): Promise<any> {
+        const messageToDeleteArgs =  await ctx.args?.pickResult("number");
+
+        if(!messageToDeleteArgs?.value) return ctx.sendTemporaryMessage({ content: `${CatNo} -  You must input the **clear** to clear the message.` }) ;
+        if(messageToDeleteArgs?.value! > 100) return ctx.sendTemporaryMessage({ content: `${CatNo} - You can't clear __${messageToDeleteArgs?.value}__ because is higher under 100` })
+
+        if(ctx.channel?.isText() && ctx.context.inGuild()) {
+            const channel = ctx.channel as GuildTextBasedChannel;
+            const deletedMessage = await channel.bulkDelete(messageToDeleteArgs?.value ?? 10, true);
+
+            await ctx.sendTemporaryMessage({ content: `${PepeYes} - Successfully clear **__${deletedMessage.size}__** messages!` });
         }
     }
 }

@@ -102,6 +102,31 @@ export class CommandContext {
         return this.context.channel!.send(options as MessageOptions | MessagePayload | string);
     }
 
+    public async sendTemporaryMessage(
+        options:
+            | InteractionReplyOptions
+            | MessageOptions
+            | MessagePayload
+            | string,
+        ms?: number | 5000
+    ): Promise<Message | void> {
+        const context = this.context as CommandInteraction | Message | SelectMenuInteraction;
+        const msg = this.send(
+            options,
+            this.isInteraction()
+                ? (context as Interaction).isCommand() || (context as Interaction).isSelectMenu()
+                    ? (context as CommandInteraction).replied || (context as CommandInteraction).deferred
+                        ? "editReply"
+                        : "reply"
+                    : "reply"
+                : "reply"
+        );
+
+        setTimeout(async () => {
+            if((await msg).deletable) await (await msg).delete();
+        }, ms);
+    }   
+
     public isInteraction(): boolean {
         return this.isCommand() || this.isContextMenu() || this.isMessageComponent() || this.isButton() || this.isSelectMenu();
     }
