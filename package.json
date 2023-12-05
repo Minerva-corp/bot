@@ -43,7 +43,7 @@
     "fuse.js": "^6.6.2",
     "kitsu": "^10.0.0-alpha.24",
     "moment": "^2.29.4",
-    "mongodb": "^3.7.3",
+    "mongodb": "^4.17.2",
     "node-fetch": "^3.2.6",
     "pretty-ms": "^8.0.0",
     "reflect-metadata": "^0.1.13",
