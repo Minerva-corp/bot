@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout Actions
         id: actions_checkout
-        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # tag=v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480 # tag=v1
